@@ -1,31 +1,37 @@
 import { useState } from "react";
 import "./App.css";
 
-function DisplayDate() {
-  const todayDate = new Date().toDateString();
+function DisplayDate({ count }) {
+  let todayDate = new Date();
+
+  todayDate.setDate(todayDate.getDate() + count);
+
   return (
     <>
-      <div>
-        <p>{todayDate}</p>
-      </div>
+      {count === 0 && (
+        <div>
+          <p>Today is {todayDate.toDateString()}</p>
+        </div>
+      )}
+      {count >= 1 && (
+        <div>
+          <p>
+            {count} day(s) from Today is {todayDate.toDateString()}
+          </p>
+        </div>
+      )}
+      {count < 0 && (
+        <div>
+          <p>
+            {Math.abs(count)} day(s) ago was {todayDate.toDateString()}
+          </p>
+        </div>
+      )}
     </>
   );
 }
 
-function StepHandle() {
-  const [step, setStep] = useState(0);
-
-  const handleStepIncrement = (e) => {
-    e.preventDefault();
-
-    setStep((currStep) => currStep + 1);
-  };
-
-  const handleStepDecrement = (e) => {
-    e.preventDefault();
-
-    setStep((currStep) => currStep - 1);
-  };
+function StepHandle({ step, handleStepDecrement, handleStepIncrement }) {
   return (
     <>
       <div>
@@ -40,17 +46,7 @@ function StepHandle() {
   );
 }
 
-function CountHandle() {
-  const [count, setCount] = useState(0);
-
-  const handleCountDecrement = () => {
-    setCount((currCount) => currCount - 1);
-  };
-
-  const handleCountIncrement = () => {
-    setCount((currCount) => currCount + 1);
-  };
-
+function CountHandle({ count, handleCountDecrement, handleCountIncrement }) {
   return (
     <>
       <div>
@@ -66,12 +62,42 @@ function CountHandle() {
 }
 
 function App() {
+  const [step, setStep] = useState(1);
+  const [count, setCount] = useState(0);
+
+  const handleCountDecrement = () => {
+    setCount((currCount) => currCount - step);
+  };
+
+  const handleCountIncrement = () => {
+    setCount((currCount) => currCount + step);
+  };
+
+  const handleStepIncrement = (e) => {
+    e.preventDefault();
+
+    setStep((currStep) => currStep + 1);
+  };
+
+  const handleStepDecrement = (e) => {
+    e.preventDefault();
+
+    setStep((currStep) => currStep - 1);
+  };
   return (
     <>
       <h1>Date Counter Application</h1>
-      <StepHandle></StepHandle>
-      <CountHandle></CountHandle>
-      <DisplayDate></DisplayDate>
+      <StepHandle
+        step={step}
+        handleStepDecrement={handleStepDecrement}
+        handleStepIncrement={handleStepIncrement}
+      ></StepHandle>
+      <CountHandle
+        count={count}
+        handleCountDecrement={handleCountDecrement}
+        handleCountIncrement={handleCountIncrement}
+      ></CountHandle>
+      <DisplayDate count={count} step={step}></DisplayDate>
     </>
   );
 }
