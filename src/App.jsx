@@ -41,15 +41,25 @@ function StepHandle() {
 }
 
 function CountHandle() {
+  const [count, setCount] = useState(0);
+
+  const handleCountDecrement = () => {
+    setCount((currCount) => currCount - 1);
+  };
+
+  const handleCountIncrement = () => {
+    setCount((currCount) => currCount + 1);
+  };
+
   return (
     <>
       <div>
         <h3>Count</h3>
       </div>
       <div>
-        <button>-</button>
-        <span>{0}</span>
-        <button>+</button>
+        <button onClick={handleCountDecrement}>-</button>
+        <span>{count}</span>
+        <button onClick={handleCountIncrement}>+</button>
       </div>
     </>
   );
